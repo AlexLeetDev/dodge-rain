@@ -1,0 +1,211 @@
+:root{
+  --bg: #0b0e17;
+  --fg: #e8ecff;
+  --accent: #7bdcf7;
+  --danger: #ff5a7a;
+  --muted: #9aa6c7;
+  --glass: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,.12);
+  --surface: rgba(16,18,34,.65);
+  --shadow: rgba(0,0,0,.55);
+}
+
+*{ box-sizing: border-box; }
+html, body { height: 100%; }
+
+body{
+  margin: 0;
+  background: radial-gradient(1200px 800px at 50% 20%, #11142a 0%, var(--bg) 60%);
+  color: var(--fg);
+  font: 500 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+  display: grid;
+  place-items: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap{
+  width: min(1100px, 100vw);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+h1{
+  margin: 0 0 6px;
+  font-size: clamp(18px, 2.2vw, 24px);
+  letter-spacing: .3px;
+}
+
+.board{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+}
+
+@media (max-width: 700px){
+  /* Vertical for phones/IG-style capture */
+  .board{ aspect-ratio: 9/16; }
+}
+
+canvas{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* -------- HUD -------- */
+.hud{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 10px;
+  font-weight: 650;
+  text-shadow: 0 2px 8px rgba(0,0,0,.55);
+}
+
+.left, .right{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pill{
+  background: var(--glass);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pill.small{ padding: 4px 8px; }
+
+.muted{ color: var(--muted); }
+
+/* Brand watermark */
+.watermark{
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: .3px;
+  opacity: .9;
+  pointer-events: auto;
+}
+
+.watermark:hover{ opacity: 1; }
+
+@media (max-width: 480px){
+  .watermark{ font-size: 12px; padding: 3px 8px; }
+}
+
+/* -------- Mobile Controls -------- */
+.btnbar{
+  position: absolute;
+  left: 0; right: 0;
+  bottom: calc(4px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: auto;
+}
+
+.btn{
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+  padding: 12px 16px;
+  min-width: 84px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--glass);
+  backdrop-filter: blur(6px);
+  color: var(--fg);
+  font-weight: 750;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn.small{ min-width: auto; padding: 8px 12px; }
+
+.btn:hover{ transform: translateY(-1px); }
+.btn:active{ transform: translateY(0); }
+
+/* High-visibility focus (good contrast on dark bg) */
+.btn:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 4px rgba(123,220,247,.25),
+    0 8px 24px rgba(0,0,0,.35);
+}
+
+/* -------- Overlay / Card -------- */
+.overlay{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(10,12,20,.55), rgba(10,12,20,.65));
+  backdrop-filter: blur(2px);
+  text-align: center;
+  padding: 24px;
+}
+
+.card{
+  max-width: min(90%, 520px);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  padding: 18px;
+  background: var(--surface);
+  box-shadow: 0 20px 60px var(--shadow);
+}
+
+.card h2{
+  margin: .2em 0;
+  font-size: 24px;
+}
+
+.kbd{
+  font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas;
+  background: #11131a;
+  border: 1px solid #202435;
+  border-radius: 6px;
+  padding: 4px 6px;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.actions{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.note{
+  opacity: .7;
+  font-size: 13px;
+}
+
+/* -------- UX niceties -------- */
+::selection{
+  background: rgba(123,220,247,.25);
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}
