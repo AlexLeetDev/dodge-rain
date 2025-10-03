@@ -111,6 +111,38 @@ canvas{
   .watermark{ font-size: 12px; padding: 3px 8px; }
 }
 
+/* --- Mobile HUD compaction: keep everything on one top row --- */
+@media (max-width: 700px){
+  .hud{
+    padding: 8px;
+    gap: 6px;            /* small gaps so pills fit */
+    flex-wrap: nowrap;   /* force one line */
+  }
+  .left, .right{
+    gap: 6px;
+  }
+  /* Shrink pills slightly */
+  .hud .pill{
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  .hud .pill.small{
+    padding: 3px 6px;
+  }
+  /* Hide labels to save width: show just the numbers */
+  .hud .label{
+    display: none;
+  }
+  /* Prevent long domains from pushing to a new line */
+  .watermark{
+    max-width: 34vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: auto; /* stays clickable, HUD has pointer-events:none */
+  }
+}
+
 /* -------- Mobile Controls -------- */
 .btnbar{
   position: absolute;

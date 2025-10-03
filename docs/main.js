@@ -16,7 +16,7 @@
 
   // --- Optional: motion trails (afterimage) ---
   const TRAIL_COLOR = 'rgba(11,14,23,0.24)';  // higher alpha = shorter trails
-  let TRAILS_ON = false; // flip to true if you want the effect on by default
+  let TRAILS_ON = false; // press V to toggle while testing
 
   // Game state
   const state = {
@@ -34,14 +34,14 @@
 
   // --- Mobile/portrait tuning ---
   let SPEED_MULT = 1;   // scales shard falling speed
-  let SPAWN_MULT = 1;   // scales spawn interval (>1 = slower spawns)
+  let SPAWN_MULT = 1;   // scales spawn interval (>1 = fewer spawns)
 
   function tuneForLayout() {
     const rect = board.getBoundingClientRect();
     const portrait = rect.height >= rect.width;
 
     if (portrait) {
-      // Bigger, slightly higher player for phone portrait
+      // Bigger & slightly higher paddle in portrait
       player.w = 0.14;        // was 0.08
       player.h = 0.035;       // was 0.03
       player.y = 0.88;        // was 0.92
@@ -62,15 +62,16 @@
     }
   }
 
-  // Resize to CSS size (DPR-aware)
+  // Resize to CSS size (DPR-aware) — use identity transform (fix for mobile)
   function fit(){
     const rect = board.getBoundingClientRect();
-    canvas.width = Math.round(rect.width * dpr);
+    canvas.width  = Math.round(rect.width  * dpr);
     canvas.height = Math.round(rect.height * dpr);
-    // Map drawing to CSS pixels so we can use canvas.width/height safely
-    ctx.setTransform(canvas.width/rect.width, 0, 0, canvas.height/rect.height, 0, 0);
 
-    // ✅ apply portrait/desktop tuning whenever layout changes
+    // ✅ Identity transform; draw using device pixels in helpers
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    // Apply portrait/desktop gameplay tuning
     tuneForLayout();
   }
   new ResizeObserver(fit).observe(board);
@@ -79,11 +80,17 @@
   // Input
   window.addEventListener('keydown', e=>{
     if(e.repeat) return;
+
     if(e.code==='ArrowLeft' || e.code==='KeyA') keys.add('left');
     if(e.code==='ArrowRight' || e.code==='KeyD') keys.add('right');
+
     if(e.code==='KeyP'){ state.paused=!state.paused; $status.textContent = state.paused?'Paused':'Engaged'; }
     if(e.code==='KeyR'){ if(state.over) start(); }
-    // Optional: toggle trails quickly with V
+
+    // Start with Enter/Space if not started or after game over
+    if((e.code==='Enter' || e.code==='Space') && (!state.started || state.over)) start();
+
+    // Visual toggle: trails
     if(e.code==='KeyV'){ TRAILS_ON = !TRAILS_ON; $status.textContent = TRAILS_ON ? 'Trails On' : 'Trails Off'; }
   });
   window.addEventListener('keyup', e=>{
@@ -103,6 +110,8 @@
 
   // Start
   startBtn.addEventListener('click', start);
+  // Start if user clicks/taps the dim overlay background
+  overlay.addEventListener('click', (e) => { if (e.target.id === 'overlay') start(); });
   board.addEventListener('pointerdown', ()=>{ if(!state.started || state.over) start(); });
 
   function start(){
@@ -124,7 +133,7 @@
       y: -0.12,
       w, h: rand(0.03, 0.06),
       // ✅ use SPEED_MULT so phones feel fairer
-      vy: (rand(0.45, 0.75) * SPEED_MULT) + Math.min(0.6, state.score*0.0008*SPEED_MULT),
+      vy: (rand(0.45, 0.75) * SPEED_MULT) + Math.min(0.6, state.score*0.0008 * SPEED_MULT),
       rot: rand(0, Math.PI*2),
       vr: rand(-2.5, 2.5),
       glow: `rgba(255,158,100,${rand(0.6,0.9)})`
