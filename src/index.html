@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Cyber Rain</title>
+    <meta name="description" content="A fast, simple browser game where you dodge falling blocks and try to survive as long as you can. Built with HTML5 Canvas and JavaScript, it's quick to play and works on desktop and mobile." />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="wrap">
+        <h1>⚡ Cyber Rain</h1>
+
+        <div class="board" id="board">
+            <canvas id="game" width="1280" height="720" aria-label="Dodge Rain game"></canvas>
+
+            <!-- HUD -->
+            <div class="hud" aria-hidden="true">
+                <div class="left">
+                    <div class="pill">Score: <span id="score">0</span></div>
+                    <div class="pill">Best: <span id="best">0</span></div>
+                </div>
+                <div class="right">
+                    <!-- Watermark -->
+                    <a class="pill small watermark"
+                        href="https://alexleet.com"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Visit alexleet.com">alexleet.com</a>
+                    <!-- Status -->
+                    <div class="pill small"><span id="status" class="muted">Tap/Press to Start</span></div>
+                </div>
+            </div>
+            
+            <!-- Mobile controls -->
+            <div class="btnbar" id="btnbar">
+                <button class="btn small" data-act="left">◀︎</button>
+                <button class="btn small" data-act="right">▶︎</button>
+            </div>
+            
+            <!-- Overlay -->
+            <div class="overlay" id="overlay">
+                <div class="card">
+                    <h2>Survive the rain</h2>
+                    <p>Move left/right to dodge falling shards. Survive as long as you can.</p>
+                    <p><span class="kbd">←/A</span> <span class="kbd">→/D</span> move · <span class="kbd">P</span> pause · <span class="kbd">R</span> restart</p>
+                    <div class="actions">
+                        <button class="btn" id="startBtn">Start</button>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <p class="note">HTML5 Canvas • zero dependencies • responsive & touch-friendly</p>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
